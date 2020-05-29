@@ -1,0 +1,286 @@
+
+#log_in_form_container{
+	width:450px;
+	height: 0px;
+	background-color:white; 
+	margin-top: 60px;
+	margin-right: -40px;	
+	border-radius: 5px;
+	 transition: all 0.8s ease;
+	 float: right;
+	 display: inline-block;
+	 overflow: hidden;
+	  visibility: hidden;
+	  box-shadow:0px 0px 10px rgba(0,0,0,0.40);
+	  padding-bottom: 10px;
+}
+
+
+#log_in_form_container.open{
+	width:450px;
+	height: auto;
+	background-color:white; 
+	margin-top: 60px;
+	margin-right: -40px;	
+	border-radius: 2.5px;
+	 transition: all 0.8s ease;
+	 float: right;
+	 display: inline-block;
+	 overflow: hidden;
+	  visibility: visible;
+	  box-shadow:0px 0px 10px rgba(0,0,0,0.40);
+	  padding-bottom: 10px;
+	  
+}
+.login_form{
+	font-size: 1px;
+}
+
+.acc_option{
+margin-top:-2.5% ;
+font-size: 10px;
+color: black;
+letter-spacing: 2px;
+font-family: "HelveticaNeue", Medium;
+font-weight: bold;
+text-align: center;
+
+margin-bottom:2.5% ;
+}
+
+#log_in_form{
+	width:100%;
+	height: auto;
+	background-color: #; 
+	 float: right;
+	 display: inline-block;
+	 overflow: hidden;
+	 padding-bottom: 10px;
+}
+
+#top_bar{
+	width: 100%;
+	height: 15px;
+	display: inline-block;
+	background-color: ;
+	float: left;
+}
+
+#bottom_bar{
+	width: 100%;
+	height: 30px;
+	display: inline-block;
+	background-color:;
+	float: left;
+}
+
+.signIn_form_txt_field_cont{
+	width: 93%;
+	margin-left: 3.5%;
+	height: 40px;
+	margin-top:10px;
+	background-color: #303030;
+	border-radius: 1px;
+	display: inline-block;
+	float: left;
+	overflow: hidden;
+}
+
+.signIn_form_btn_cont{
+	width: 20%;
+	margin-right: 3.5%;
+	height: 20px;
+	margin-top:15px;
+	background-color: #1db954;
+	border-radius: 2.5px;
+	display: inline-block;
+	float: right;
+	overflow: hidden;
+	color: white;
+	 font-family: "CircularStd-Bold",serif;
+	 font-size: 15px;
+	 cursor:grab;
+	 transition: all 1.5s ease;
+	 border: none;}
+
+.signIn_form_btn_cont:hover{
+	width: 20%;
+	margin-right: 3.5%;
+	height: 20px;
+	margin-top:15px;
+	background-color: #00aa34;
+	border-radius: 2.5px;
+	display: inline-block;
+	float: right;
+	overflow: hidden;
+	color: white;
+	 font-family: "CircularStd-Bold",serif;
+	 font-size: 15px;
+	 cursor:grab;
+	 transition: all 1.5s ease;
+	 border: none;
+}
+
+.logout_form_btn_cont{
+	width:auto;
+	margin-right: 3.5%;
+	height: 20px;
+	margin-top:15px;
+	background-color: red;
+	border-radius: 2.5px;
+	display: inline-block;
+	float: right;
+	overflow: hidden;
+	color: white;
+	 font-family: "CircularStd-Bold",serif;
+	 font-size: 15px;
+	 cursor:grab;
+	 transition: all 1.5s ease;
+	 border: none;}
+
+.logout_form_btn_cont:hover{
+	width:auto;
+	margin-right: 3.5%;
+	height: 20px;
+	margin-top:15px;
+	background-color: red;
+	border-radius: 2.5px;
+	display: inline-block;
+	float: right;
+	overflow: hidden;
+	color: white;
+	 font-family: "CircularStd-Bold",serif;
+	 font-size: 15px;
+	 cursor:grab;
+	 transition: all 1.5s ease;
+	 border: none;
+}
+
+
+
+.btn_txt{
+	margin-left:20px;
+	margin-top: 2.2px;
+}
+
+.form_title{
+	 margin-top: 20px;
+	 font-family: "Verdana", Times, serif;
+	 font-size: 11px;
+	  color: #d3d3d3;
+	  font-weight: 500;
+	  margin-left: 3.5%;
+	  float: left;
+	  	display: inline-block;
+		background-color:;
+}
+
+.form_title2{
+	 font-family: "Verdana", Times, serif;
+	 font-size: 8px;
+	  color: white;
+	  font-weight: 500;
+	  float: right;
+}
+
+.form_title3_cont{
+	width: 30%;
+	height: 10px;
+
+	 font-family: "Verdana", Times, serif;
+	 font-size: 11px;
+	  color: #d3d3d3;
+	  margin-top: 10px;
+	  margin-left: 10px;
+	  font-weight: 50;
+	  float: left;
+}
+
+.form_title4_cont{
+	width: 18%;
+	height: 10px;
+
+	 font-family: "Verdana", Times, serif;
+	 font-size: 11px;
+	  color: #d3d3d3;
+	  margin-top: 10px;
+	  margin-left: 10px;
+	  font-weight: 50;
+	  float: right;
+}
+
+.form_title2_cont{
+	float: right;
+	background-color: ;
+	width:80px;
+	height: 10px;
+	margin-top:3px; 
+
+}
+
+#log_in_btn{
+	width: 100px;
+	height: 50px;
+	float: right;
+	background-color: white;
+	margin-top: -1.05px;
+}
+
+.sign_up_btn{
+	
+	 width: 100px;
+	 height: 20px;
+	 margin-top: -5px;
+	 background-color:;
+	  	  float: left;
+	  	   padding-left:0px;
+	   
+}
+
+input[type=text] {
+    width: 90%;
+    height: 100% ;
+    margin-left: 5%;
+    background-color: white;  
+    padding-left: 10px;  
+     color:#303030;
+     border: 1px solid #e2e2e2;
+
+}
+
+
+
+input[type=password] {
+    width: 90%;
+    height: 100% ;
+    margin-left: 5%;
+    background-color:white ;  
+    padding-left: 10px;  
+    color: #303030;
+    border: 1px solid #e2e2e2;
+
+}
+
+
+input[type=submit] {
+    width: 90%;
+    height: auto ;
+	margin: 2.5%;
+	margin-left: 5%;
+    background-color:yellow ;  
+    padding-left: 10px;  
+    color: #303030;
+	border: 1px solid yellow;
+	font-size: 15px;
+
+
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+     -webkit-appearance: none;
+    -moz-appearance: none;
+}

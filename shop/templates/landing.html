@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block content %}
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='profile.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='post grid.css') }}">    
+</head>
+
+
+
+<div id="container" class="container">
+	<div  id="parallax" class="parallax" data-parallax="scroll" data-z-index="1" data-image-src="bg.jpg">
+			<div id="enterSite_btn">
+				<div class="btntxt">Enter Shop</div>
+			</div>
+	</div>
+</div>
+
+{% endblock content %}

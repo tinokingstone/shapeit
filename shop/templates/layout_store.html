@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='profile.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='post grid.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='hdrtop.css') }}">
+
+	{% if title %}
+		<title>Shapeit.com - {{ title }} </title>
+	{% else %}
+		<title>Shapeit.com</title>
+    {% endif %}
+    
+</head>
+
+
+<div id="overlay" >
+    <div id="menubar">
+
+		<div id="menu_options" >
+		<!-- menu needs finishing -->
+			<div id="" class="segment_titles"> "LOGO" </div>
+			
+            <div id="profile_icon_cont">
+                <div class="segment_titles"> LOGIN </div>
+			</div>
+
+			<div id="store_segments">
+
+				<div class="segment_titles">
+					UNDERGARMENTS
+				</div>
+				<div class="segment_titles">
+					SHAPEWEAR
+				</div>
+				<div class="segment_titles">
+					ACTIVEWEAR
+				</div>
+				<div class="segment_titles">
+					CASUALWEAR
+				</div>
+				<div id="search_icon">
+
+				</div>
+
+			</div>
+
+
+		<!--///////////// SEARCH BAR /////////// -->
+			<div id="search_bar_cont">
+				<form class="" action="{{url_for('result')}}">
+					<input class="search_bar" type="search" placeholder="Search" aria-label="Search" name="q">
+				</form> 
+			</div>	
+		</div>
+
+
+
+					<div id="more_info">
+
+						<div id="item_view_bg">
+						</div>
+		
+							<div id="account_forms">
+	    <!-- ///////////////// REGISTER FORM ///////////////////// -->
+							<div id="login_form">
+
+								{% from "_formhelpers.html" import render_field %}
+								{% include '_messages.html' %}
+								<form method=post>
+									{{form.csrf_token}}
+								<div>
+									<div class="title_small">WELCOME BACK</div>
+									<div class="text_medium">login to your account</div>
+									{{ render_field(form.email, class="form-control") }}
+									{{ render_field(form.password, class="form-control") }}
+								</div>
+								<p><input type="submit" value="Login" class="btn-info">
+								</form>
+
+								<!-- <div class="text_medium">don’t have an account?</div> -->
+								<div id="acc_option2" class="acc_option">CREATE AN ACCOUNT</div>
+
+							</div>
+
+		<!-- //////////// REGISTER FORM ///////////////// -->
+
+							<div id="register_form">
+
+								{% from "_formhelpers.html" import render_field %}
+								{% include '_messages.html' %}
+								<form method=post>
+									{{form.csrf_token}}
+								<div>
+
+									<div class="title_small">NEW HERE ?</div>
+									<div class="text_medium">create an account to view order history,</div>
+									<div class="text_medium">save addresses & faster checkout !</div>
+
+									{{ render_field(form.email, class="form-control") }}
+									{{ render_field(form.password, class="form-control") }}
+								
+								<div class="text_small">By signing up for an account you accept our</div>
+								<div class="text_small">Terms and Privacy Policy.</div>
+
+								</div>
+								<p><input type="submit" value="Register" class="btn-info">
+								</form>
+
+								<!-- <div class="text_medium">Already have an account?</div> -->
+								<div id="acc_option" class="acc_option">LOGIN</div>
+							</div>
+
+						</div>
+
+
+				<!-- ////////////ITEM VIEWER/////// -->
+
+						<div id="item_view_cont">
+						
+							{% for product in products %}
+							<input id="search_input" type="hidden" name="product_id" value="{{product.id}}">
+								
+							{# {% include 'test.html' %}  #}
+
+							{% endfor %}
+						
+						</div>
+
+					</div>
+
+	</div>
+
+</div>
+							
+
+<body>
+		<div class="Super_container">
+			
+
+		{% with messages = get_flashed_messages(with_categories=true) %}
+				{% if messages %}
+					{% for category, message in messages %}
+						<div class="alert alert={{ category }}"></div>
+						{{ message }}
+					{% endfor %}
+				{% endif %}
+		{% endwith %}
+				
+			{% block content %} 
+
+		
+
+			{% endblock content %}
+	</div>
+	<script src="{{url_for('static', filename='js/jquery-3.4.1.slim.min.js')}}" ></script>
+	<script src="{{url_for('static', filename='js/popper.min.js')}}"></script>
+	<script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
+  </body>
+
+ </html>
+
+
+
+<script type="text/javascript">
+
+var menubar_m = document.getElementById("menubar");
+var more_info_forms = document.getElementById("more_info");
+var acc_forms = document.getElementById("account_forms");
+var view_blr_m = document.getElementById("shop_main_cont");	
+
+var icon_btn_m = document.getElementById("profile_icon_cont");
+
+		icon_btn_m.onclick = function(){
+
+			if(acc_forms.className== "open"){
+			menubar_m.className = "";
+			view_blr_m.className = "";
+			more_info_forms.className = "";
+			acc_forms.className = "";
+
+			}else{
+			menubar_m.className = "open";
+			view_blr_m.className = "open";
+			more_info_forms.className = "iopen";
+			acc_forms.className = "open";
+			}
+
+			};
+
+
+ </script>
+
+
+
+<script type="text/javascript">
+
+	var login_form = document.getElementById("login_form");
+	var register_form = document.getElementById("register_form");
+	var acc_option = document.getElementById("acc_option");
+			acc_option.onclick = function(){
+				if(register_form.className== "open"){
+				register_form.className = "";
+				login_form.className = "";
+
+				}else{
+				register_form.className = "open";
+				login_form.className = "open";
+
+				}
+	
+				};
+	 </script>
+
+
+
+<script type="text/javascript">
+
+	var login_form2 = document.getElementById("login_form");
+	var register_form2 = document.getElementById("register_form");
+	var acc_option2 = document.getElementById("acc_option2");
+
+			acc_option2.onclick = function(){
+				if(register_form2.className== "open"){
+				register_form2.className = "";
+				login_form2.className = "";
+
+				}else{
+				register_form2.className = "open";
+				login_form.className = "open";
+
+				}
+	
+				};
+	 </script>
+
+
+
+<!-- SEARCH BTN  -->
+<script type="text/javascript">
+
+	var menubar_s = document.getElementById("menubar");	
+	var itm_content_s = document.getElementById("more_info");	
+	var view_blr_s = document.getElementById("shop_main_cont");
+
+
+	var search_bar_cont = document.getElementById("search_bar_cont");
+	var search_icon = document.getElementById("search_icon");
+
+			search_icon.onclick = function(){
+				if(search_bar_cont.className== "open"){
+				search_bar_cont.className = "";
+				view_blr_s.className = "";
+				itm_view_cont_s.className = "";
+				itm_content_s.className = "";
+				menubar_s.className = "";
+
+
+
+
+				}else{
+				search_bar_cont.className = "open";
+				view_blr_s.className = "open";
+				menubar_s.className = "open";
+				itm_view_cont_s.className = "open";
+				itm_content_s.className = "iopen";
+
+
+
+				}
+				};
+	 </script>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='profile.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='post grid.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='hdrtop.css') }}">
+
+
+    
+	{% if title %}
+		<title>Shapeit.com - {{ title }} </title>
+	{% else %}
+		<title>Shapeit.com</title>
+    {% endif %}
+    
+</head>
+
+
+<div id="overlay" >
+
+    <div id="menubar">
+            <div id="menu">  </div>
+                    <div id="menu_icons"> 
+                        <div id="profile_icon_cont">
+                            <div id="profile_icon"></div>
+                        </div>
+					</div>	
+
+					<div id="log_in_form_container">
+						<div id="log_in_form">
+
+							<div class="title_smalll">Welcome Back</div>
+							<div  class="text_normal">login to your account</div>
+
+							<form method=post>
+								{{form.csrf_token}}
+							<div>
+								{{ render_field(form.email) }}
+								{{ render_field(form.password) }}
+							</div>
+							<p><input type="submit" value="Login" class="btn-info">
+							</form>
+
+						</div>						
+					</div>	
+
+					<div id="more_info">
+					
+						<div id="item_view_bg">
+						</div>
+
+						<div id="item_view_cont">
+						</div>
+
+					</div>			
+
+	</div>
+
+</div>
+
+
+
+
+<script type="text/javascript">
+	////////////////ON BUTTON CLICK, CHANGE//////...
+var content = document.getElementById("log_in_form_container");
+var button = document.getElementById("profile_icon");
+			button.onclick = function(){
+			if(content.className== "open"){
+			content.className = "" ;
+			}else{
+			content.className = "open";
+			}
+
+			};
+
+////////////////////////SIGN UP FORM///////////////////////////
+var sign_up_form_cont = document.getElementById("sign_up_form_cont");
+var sign_up_form = document.getElementById("sign_up_form");
+var sign_up_btn = document.getElementById("sign_up_btn");
+
+		sign_up_btn.onclick = function(){
+
+			if(sign_up_form.className== "open"){
+			sign_up_form.className = "";
+			sign_up_form_cont.className = ""
+
+			}else{
+			sign_up_form.className = "open"
+			sign_up_form_cont.className = "open";
+			}
+
+			};
+
+/////////////////////////////////////////////////////////////
+var sign_up_form_cont = document.getElementById("sign_up_form_cont");
+</script>
+
+
+<body>
+		<div class="Super_container">
+			
+
+		{% with messages = get_flashed_messages(with_categories=true) %}
+				{% if messages %}
+					{% for category, message in messages %}
+						<div class="alert alert={{ category }}"></div>
+						{{ message }}
+					{% endfor %}
+				{% endif %}
+		{% endwith %}
+				
+			{% block content %} 
+
+
+
+			{% endblock content %}
+	</div>
+
+  </body>
+
+ </html>
