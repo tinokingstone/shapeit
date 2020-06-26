@@ -1,8 +1,389 @@
-{% extends 'layout.html' %}
+{% extends "layout_store_open.html" %}
 {% block content %}
-{% include 'navbar.html' %}
-<!---============== END OF NAV BAR ==================-->
 
+<!DOCTYPE html>
+<html>
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='profile.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='post grid.css') }}">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="parallax.js/parallax.min.js"></script>
+
+<body>
+				<div id="body_cont">
+
+		
+					<div id="shop_main_cont">
+
+						
+						
+						<div id="shop_cont" >
+
+							<div id="shop_top"></div>
+
+
+							<div id="shop_menu_bar">
+
+							</div>
+
+							
+							<div id="shop_sections">
+
+								<div id="categories">
+										
+									<div class="catetitle"> </div>
+									<div id="items_cont">
+
+										<div id="catOptions" >
+
+										
+										<li class="list-group" >
+										<div class="list-group-title ">NEW ARRIVALS</div>
+										<ul class="menu" role="menu">
+
+											<li style="list-style-type: none;">
+														<div> <a class="cat_link " href="{{url_for('store')}}" role="menuitem">VIEW ALL</a> </div>
+											</li>
+										</ul>
+
+									<!----------------- The List Of Brands -------------------->
+										<li class="list-group" >
+											<strong class="list-group-title">SHOP BY SIZE</strong>
+											<ul class="menu" role="menu">
+
+												<li style="list-style-type: none;">
+													<div> <a class="cat_link " href="#" role="menuitem">XS</a> </div>
+													<div> <a class="cat_link " href="#" role="menuitem">S</a> </div>
+													<div> <a class="cat_link " href="#" role="menuitem">M</a> </div>
+													<div> <a class="cat_link " href="#" role="menuitem">L</a> </div>
+													<div> <a class="cat_link " href="#" role="menuitem">XL</a> </div>
+												</li>
+											</ul>
+
+									<!----------------- The List Of Categories  -------------------->
+										<li class="list-group" >
+											<strong class="list-group-title">SHOP BY PRODUCT</strong>
+											<ul class="menu" role="menu">
+
+												<li style="list-style-type: none;"> 
+													{% for category in categories %} 
+															<div> <a class="cat_link " href="{{url_for('get_category',id=category.id)}}" role="menuitem">{{category.name}}</a> </div>
+													{% endfor %}
+												</li>
+											</ul> 
+
+								
+													</ul>
+												</li>
+											</ul> 
+										</nav>
+								<!----------------- END The List Of Brands -------------------->
+								<li class="list-group" >
+										<strong class="list-group-title" style="color:red;" >SPECIAL OFFERS</strong>
+										<ul class="menu" role="menu">
+											<li style="list-style-type: none;">
+													<div> <a class="cat_link " href="#" role="menuitem"> View All</a> </div>
+											</li>
+										</ul>
+												
+										</div>
+
+									</div>
+								
+								</div>
+
+								<div id="item_section">
+                                    <div class="container mt-5">
+                                        <div class="row">
+                                            <div class="col-md-6" id="b_image">
+                                                <img src="{{url_for('static',filename='images/' + product.image_1)}}" alt="{{product.name}}" width="100%" height="auto">
+											</div>
+											
+                                            <div class="item_info_all">
+												<h4 class="segment_titles_1">{{product.name}}</h4>
+												<div class="itm_section">
+																										
+													<div class="item_discount_1">
+														<p class="segment_titles_1">£{{product.price}}</p>
+
+														{% if product.discount > 0 %}
+														<p>Discount: {{product.discount}} % </p>
+														{% endif %}
+														
+													<div class="item_discount_2">
+														<form action="{{url_for('AddCart')}}" method="post">
+															<input type="hidden" name="product_id" value="{{product.id}}">	
+															<button type="submit" class="btn btn-sm btn-warning">Add to Cart</button>
+															<label for="quantity">Quantity: </label>
+															<input type="number" name="quantity" value="1" min="1" max="{{product.stock}}">
+															{% set colors = product.colors.split(',') %}
+															<label for="colors">Colors: </label>
+															<select name="colors" id="colors">
+																{% for color in colors %}
+																{% set col = color.split(':') %}
+																<option value="{{col[0]}}">{{col[0] | capitalize }}</option>
+																{% endfor %}
+															</select>
+														</form>
+													</div>
+
+														
+													</div>
+													
+												</div>
+
+												<div class="itm_section">
+
+													<p class="super_small_text">
+														<b>Product discription</b>
+														{{product.desc}}
+													</p>
+
+													<p class="super_small_text">
+														<b>Shipping Policy</b>
+														Free shipping on domestic orders $75+ Please allow 2-4 business days for your order to be processed and shipped out from our warehouse.
+													</p>
+
+													<p class="super_small_text">
+														<b>Return Policy</b>
+														30-Day Returns For Domestic Orders ($6 return shipping fee) - Products must returned unworn, unwashed, in their original condition and with all tags attached.We reserve the right to refuse returns that do not meet this criteria.
+													</p>
+
+												</div>
+
+                                            
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-12" id="s_image">
+                                                <img src="{{url_for('static',filename='images/'+ product.image_1)}}" alt="{{product.name}}" width="100" height="100">
+                                                <img src="{{url_for('static',filename='images/'+ product.image_2)}}" alt="{{product.name}}" width="100" height="100" class="ml-5">
+                                                <img src="{{url_for('static',filename='images/'+ product.image_3)}}" alt="{{product.name}}" width="100" height="100" class="ml-5">
+                                            </div>
+                                        </div>
+                                    
+                                    </div>
+                                
+									<div class="categorie_title"> </div>
+									<div id="items_cont">
+
+										<div id="items" >
+										</div>
+
+									</div>
+								</div> 
+ 
+								<div id="checkOut">
+
+									
+									<div class="basket_icon">
+										<a href="{{url_for('getCart')}}" class="cart_total"> {{ session['Shoppingcart']|length }} </a>
+									</div>
+
+
+									<div class="basket_cont">
+
+
+										<div class="segment_titles_checkout"> YOUR ITEMS </div>
+										{% if session['Shoppingcart']|length > 0 %}
+										{% for key, product in session['Shoppingcart'].items() %}
+										{% set discount =(product.discount/100) * product.price|float %}
+
+										<div class="basket_item">
+											<div class="bi_img">
+												<img src="{{url_for('static',filename='images/'+ product.image)}}" alt="{{product.name}}" width="100%" height="">
+											</div>
+											<div class="bi_info">
+												<div class="bi_name">
+													{{product.name}}
+												</div>
+												<div class="bi_price">
+													£{{product.price}}
+													| Qty: 1 | Size: M (UK)
+												</div>
+											</div>
+											<div class="bi_del_btn"><a href="{{url_for('deleteitem', id=key)}}" class="bi_del_btn_img"></a></div>
+										</div>
+
+										{% endfor %}
+										{% endif %}
+
+
+										<div class=""><button type="submit" class="bi_edit">Edit Basket</button></div>
+
+											<div class="cost_calculation">
+												{% if session['Shoppingcart']|length == 0 %}
+													<div class="bi_price">You currently have no items in your basket... </div>
+
+												{% elif session['Shoppingcart']|length > 0 %}
+													<div class="breakdown_cont"> <div  class="bi_price">(Excl. delivery): </div><div class="breakdown_price">£{{grandtotal}}</div></div>
+												{% endif %} 
+											</div>
+
+											<div class=""> 
+												<a href="{{url_for('getCart')}}" class="checkout_btn"> COMPLETE ORDER </a> 
+											</div>
+
+								</div>
+
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<div class="" >{% include 'footer.html' %}</div>
+
+
+
+
+
+<script src="post_grid.js" type="text/javascript"></script>
+<script src="paralax.js"></script>
+
+<script type="text/javascript">
+	////////////////ON BUTTON CLICK, CHANGE//////...
+var content = document.getElementById("checkOut");
+var content2 = document.getElementById("item_section");
+
+var button = document.getElementById("checkOut");
+			button.onclick = function(){
+			if(content.className== "open"){
+			content.className = "" ;
+			content2.className = "" ;
+
+			}else{
+			content.className = "open";
+			content2.className = "open" ;
+			}
+
+			};
+
+////////////////////////SIGN UP FORM///////////////////////////
+var sign_up_form_cont = document.getElementById("sign_up_form_cont");
+var sign_up_form = document.getElementById("sign_up_form");
+var sign_up_btn = document.getElementById("sign_up_btn");
+
+		sign_up_btn.onclick = function(){
+
+			if(sign_up_form.className== "open"){
+			sign_up_form.className = "";
+			sign_up_form_cont.className = ""
+
+			}else{
+			sign_up_form.className = "open"
+			sign_up_form_cont.className = "open";
+			}
+
+			};
+
+/////////////////////////////////////////////////////////////
+var sign_up_form_cont = document.getElementById("sign_up_form_cont");
+</script>
+
+
+<script type="text/javascript">
+
+////////////////ON BUTTON CLICK, OPEN ITEM VIEWER //////...
+	var itm_content = document.getElementById("more_info");
+	var itm_button = document.getElementById("sdfdfd");
+	
+	
+				itm_button.onclick = function(){
+				if(itm_content.className== "iopen"){
+				itm_content.className = "" ;
+	
+				}else{
+					itm_content.className = "iopen";
+				}
+	
+				};
+</script>
+
+<script type="text/javascript">
+
+	////////////////ON BUTTON CLICK, OPEN ITEM VIEWER //////...
+	var itm_v_content = document.getElementById("more_info");
+	var itm_v_button = document.getElementById("item_view_cont");
+	var view_v_blr = document.getElementById("shop_main_cont");	
+
+	
+				itm_v_button.onclick = function(){
+				if(itm_v_content.className== "iopen"){
+				itm_v_content.className = "" ;
+				view_v_blr.className = "";
+	
+				}else{
+					itm_v_content.className = "";
+					view_v_blr.className = "";
+
+				}
+	
+				};
+</script>
+
+
+
+<script>
+	document.querySelectorAll('.quicklook_cont').forEach(item => { 
+  	item.addEventListener('click', event => {
+    //handle click
+
+	// OPEN ITEM VIEWER ON CLICK //
+
+	var itm_view_cont = document.getElementById("item_view_cont");	
+	var itm_content = document.getElementById("more_info");	
+	var view_blr = document.getElementById("shop_main_cont");
+	
+	
+				if(itm_content.className== "iopen"){
+				itm_content.className = "" ;
+				view_blr.className = "" ;
+				itm_view_cont.className = "" ;
+				}else{
+					itm_content.className = "iopen";
+					view_blr.className = "open";
+					itm_view_cont.className = "open" ;	
+
+				};
+ 		 })
+	})
+
+</script>
+
+<script>
+	var x = document.getElementsByClassName("item");
+	x[0].submit(); // Form submission
+</script>
+
+<script>
+   var b_image = document.getElementById('b_image');
+   var s_image = document.getElementById('s_image').getElementsByTagName('img');
+    for(var i = 0; i < s_image.length; i++){
+
+        s_image[i].addEventListener('click', full_image);
+    }
+    function full_image(){
+        var ImageSRC = this.getAttribute('src');
+        b_image.innerHTML = "<img src=" + ImageSRC + " width='400' height='400'>";
+    }
+</script>
+           
+
+
+
+<!---============== END OF NAV BAR ==================-->
+{#<br><br>
 <div class="container mt-5">
     <div class="row">
         <div class="col-md-6" id="b_image">
@@ -58,5 +439,5 @@
         var ImageSRC = this.getAttribute('src');
         b_image.innerHTML = "<img src=" + ImageSRC + " width='400' height='400'>";
     }
-</script>
+</script>#}
 {% endblock content %}

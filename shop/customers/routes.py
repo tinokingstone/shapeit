@@ -1,13 +1,42 @@
 from flask import render_template,session, request,redirect,url_for,flash,current_app,make_response
 from flask_mail import Mail, Message
 from flask_login import login_required, current_user, logout_user, login_user
-from shop import app, db, photos, search, bcrypt, login_manager, mail
+from shop import app, db, photos, search, bcrypt, login_manager
 from .forms import CustomerRegisterForm, CustomerLoginFrom
 from .model import Register,CustomerOrder
 import secrets
 import os
 import json
 import pdfkit
+import stripe
+
+Publishable_key = 'pk_test_51GrpCaL7jtiGPePaxVWGpt8LKAfvV6SZCIoc80hyk22ME3EQeIJsg1U3ACLmwcBlypsxCnoYb5guMS4SDABC4TKN00GCCYhnJw'
+
+stripe.api_key = 'sk_test_51GrpCaL7jtiGPePaS5AsTZxoFyOE2hsU6PC9GipOV0E8pbGkSIf7vmnqH4ACRm6mgRyEP7kWroyJYl5wIqxjAANZ00bfvjIop7'
+
+@app.route('/payment',methods=['POST'])
+@login_required
+def payment():
+    invoice = request.form.get('invoice')
+    amount = request.form.get('amount')
+    customer = stripe.Customer.create(
+      email=request.form['stripeEmail'],
+      source=request.form['stripeToken'],
+    )
+    charge = stripe.Charge.create(
+      customer=customer.id,
+      description='Myshop',
+      amount=amount,
+      currency='gbp',
+    )
+    orders =  CustomerOrder.query.filter_by(customer_id = current_user.id,invoice=invoice).order_by(CustomerOrder.id.desc()).first()
+    orders.status = 'Paid'
+    db.session.commit()
+    return redirect(url_for('thanks'))
+
+@app.route('/thanks')
+def thanks():
+    return render_template('customer/thank.html')
 
 @app.route('/Email')
 def email():
@@ -70,7 +99,7 @@ def customerLogin():
             login_user(user)
             flash('You are login now!', 'success')
             next = request.args.get('next')
-            return redirect(next or url_for('home'))
+            return redirect(next or url_for('store'))
         flash('Incorrect email and password','danger')
         return redirect(url_for('customerLogin'))
             
@@ -80,7 +109,15 @@ def customerLogin():
 @app.route('/customer/logout')
 def customer_logout():
     logout_user()
-    return redirect(url_for('home'))
+    return redirect(url_for('store'))
+
+######## Remove unwanted Details from Shopping Cart ########
+def updateshoppingcart():
+    for key, shopping in session['Shoppingcart'].items():
+        session.modified = True
+        del shopping['image']
+        del shopping['colors']
+    return updateshoppingcart
 
 @app.route('/getorder')
 @login_required
@@ -88,6 +125,7 @@ def get_order():
     if current_user.is_authenticated:
         customer_id = current_user.id
         invoice = secrets.token_hex(5)
+        updateshoppingcart
         try:
             order = CustomerOrder(invoice=invoice,customer_id=customer_id,orders=session['Shoppingcart'])
             db.session.add(order)
@@ -118,13 +156,34 @@ def orders(invoice):
             subTotal += float(product['price']) * int(product['quantity'])
             subTotal -= discount
             tax = ("%.2f" % (.06 * float(subTotal)))
-            grandTotal = float("%.2f" % (1.06 * subTotal))
+            grandTotal = ("%.2f" % (1.06 * float(subTotal)))
 
     else:
         return redirect(url_for('customerLogin'))
     return render_template('customer/order.html', invoice=invoice, tax=tax,subTotal=subTotal,grandTotal=grandTotal,customer=customer,orders=orders)
 
+@app.route('/myorder')
+@login_required
+def myorders():
+    if current_user.is_authenticated:  
+        grandTotal = 0
+        subTotal = 0
+        customer_id = current_user.id
+        customer = Register.query.filter_by(id=customer_id).first()
+        # orders = CustomerOrder.query.all()
+        orders = CustomerOrder.query.filter_by(customer_id=customer_id).order_by(CustomerOrder.id.desc()).first()
 
+        for key, product in orders.orders.items():
+            discount = (product['discount']/100) * float(product['price'])
+            subTotal += float(product['price']) * int(product['quantity'])
+            subTotal -= discount
+            tax = ("%.2f" % (.06 * float(subTotal)))
+            grandTotal = float("%.2f" % (1.06 * subTotal))
+
+    else:
+        return redirect(url_for('customerLogin'))
+
+    return render_template('myorder.html',grandTotal=grandTotal,customer=customer,orders=orders)
 
 
 @app.route('/get_pdf/<invoice>', methods=['POST'])

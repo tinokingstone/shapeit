@@ -52,7 +52,25 @@
         </table>
         <table class="table table-sm">
            <tr>
-               <td> <a href="#" class="btn btn-success"> Check out </a> </td>
+               <td>   
+                   {% if orders.status =='Paid' %}
+                   {% else %}
+                <form action="{{url_for('payment')}}" method="POST">
+                {% set amount =  grandTotal.replace('.','') %}
+                <input type="hidden" name="amount" value="{{amount}}">
+                <input type="hidden" name="invoice" value="{{orders.invoice}}">
+                <script src="https://checkout.stripe.com/checkout.js"
+                  class="stripe-button"
+                  data-key="pk_test_51GrpCaL7jtiGPePaxVWGpt8LKAfvV6SZCIoc80hyk22ME3EQeIJsg1U3ACLmwcBlypsxCnoYb5guMS4SDABC4TKN00GCCYhnJw"
+                  data-name="Shape-It"
+                  data-description="CHECKOUT"
+                  data-amount="{{amount}}"
+                  data-currency="gbp">
+                </script>
+              </form> 
+              {% endif %}
+            </td>
+
                <td width="35%"></td>
                <td> <h5>Tax: £{{tax}}</h5></td>
                <td> <h5>Grand total: £{{grandTotal}}</h3> </td>

@@ -5,19 +5,19 @@ from .model import Register
 
 
 class CustomerRegisterForm(FlaskForm):
-    name = StringField('Name: ')
-    username = StringField('Username: ', [validators.DataRequired()])
-    email = StringField('Email: ', [validators.Email(), validators.DataRequired()])
-    password = PasswordField('Password: ', [validators.DataRequired(), validators.EqualTo('confirm', message=' Both password must match! ')])
-    confirm = PasswordField('Repeat Password: ', [validators.DataRequired()])
-    country = StringField('Country: ', [validators.DataRequired()])
-    city = StringField('City: ', [validators.DataRequired()])
-    contact = StringField('Contact: ', [validators.DataRequired()])
-    address = StringField('Address: ', [validators.DataRequired()])
-    zipcode = StringField('Zip code: ', [validators.DataRequired()])
+    name = StringField('')
+    username = StringField('', [validators.DataRequired()])
+    email = StringField('', [validators.Email(), validators.DataRequired()])
+    password = PasswordField('', [validators.DataRequired(), validators.EqualTo('confirm', message=' Both password must match! ')])
+    confirm = PasswordField('', [validators.DataRequired()])
+    country = StringField('', [validators.DataRequired()])
+    city = StringField('', [validators.DataRequired()])
+    contact = StringField('', [validators.DataRequired()])
+    address = StringField('', [validators.DataRequired()])
+    zipcode = StringField('', [validators.DataRequired()])
 
     profile = FileField('Profile', validators=[FileAllowed(['jpg','png','jpeg','gif'], 'Image only please')])
-    submit = SubmitField('Register')
+    submit = SubmitField('SIGN UP')
 
     def validate_username(self, username):
         if Register.query.filter_by(username=username.data).first():

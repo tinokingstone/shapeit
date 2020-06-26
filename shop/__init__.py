@@ -1,6 +1,5 @@
 from flask import Flask
 ## Flask Email ##
-from flask_mail import Mail, Message
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
@@ -35,7 +34,7 @@ photos = UploadSet('photos', IMAGES)
 configure_uploads(app, photos)
 patch_request_class(app)  # set maximum file size, default is 16MB 
 
-mail = Mail(app)
+
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 search = Search()

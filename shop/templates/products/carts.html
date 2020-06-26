@@ -1,93 +1,268 @@
-{% extends "layout.html" %}
+{% extends "layout_store_open.html" %}
 {% block content %}
-{% include 'navbar.html' %}
 
-<div class="container mt-4">
-    {% include '_messages.html' %}
-    <div class="row">
-        <div class="col-md-12">
 
-        <!---- Displaying items As a tabe in Cart ------>
-        <table class="table table-sm">
-            <thead>
-                <th>Sr</th>
-                <th>Image</th>
-                <th>Name</th>
-                <th>Color</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Discount</th>
-                <th>Subtotal</th>
-                <th>Update</th>
-                <th>Delete</th>
-            </thead>
-            <tbody>
-                {% for key, product in session['Shoppingcart'].items() %}
-                {% set discount =(product.discount/100) * product.price|float %}
-                <tr>
-                    <td>{{loop.index}}</td>
-                    <td><img src="{{url_for('static',filename='images/'+ product.image)}}" alt="{{product.name}}" width="50" height="45"></td>
-                    <td>{{product.name}}</td>
-                    <form action="{{url_for('updatecart', code=key)}}" method="post">
-                    <td>
-                        {% set colors = product.colors.split(',') %}
-                        <label for="colors">Colors: </label>
-                        <select name="color" id="color">
-                            <option value="{{product.color}}" style="display: none;">{{product.color|capitalize}}</option>
-                            {% for color in colors %}
-                            {% set col = color.split(':') %}
-                            <option value="{{col[0]}}">{{col[0] | capitalize }}</option>
-                            {% endfor %}
-                        </select>
-                    
-                    </td>
+<!DOCTYPE html>
+<html>
 
-                    <!---- Calulating Product Discount  ------>
-                    <td>£{{"%.2f"|format(product.price)}}</td>
-                    <td> <input type="number" name="quantity" min="1" max="10" value="{{product.quantity}}"> </td>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='profile.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='post grid.css') }}">
 
-                    {% if product.discount  %}
-                    <td>{{product.discount}} % &nbsp; &nbsp; is {{"%.2f"|format(discount)}}</td>
-                    {% else %}
-                    <td></td>
-                    {% endif %}
-                    {% set subtotal = product.quantity|int * product.price|float  %}
-                    <td>£{{"%.2f"|format(subtotal - discount|round(1,'floor')) }}</td>
-                    <td><button type="submit" class="btn btn-sm btn-info">Update</button> </td>
-                </form>
-                    <td> <a href="{{url_for('deleteitem', id=key)}}" class="btn btn-sm btn-danger">Delete</a></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <table class="table table-sm">
-           <tr>
-            <td> <a href="{{url_for('get_order')}}" class="btn btn-success"> Order now </a> </td>
-               <td width="35%"></td>
-               <!---- Displaying tax and grad total  ------>
-               <td> <h5>Tax: £{{tax}}</h5></td>
-               <td> <h5>Grand total: £{{grandtotal}}</h3> </td>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="parallax.js/parallax.min.js"></script>
 
-                <td> <a href="{{url_for('clearcart')}}" class="btn btn-danger btn-sm float-right mr-4"> Clear cart</a> </td>
-           </tr>
-        </table>
-        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-                <input type="hidden" name="cmd" value="_xclick">
-                <input type="hidden" name="business" value="alimizan@hotmail.com">
-                <input type="hidden" name="lc" value="GBP">
-                <input type="hidden" name="item_name" value="ShapeIT Clothing UK">
-                <input type="hidden" name="item_number" value="1966#204">
-                <input type="hidden" name="amount" value="{{grandtotal}}">
-                <input type="hidden" name="currency_code" value="GBP">
-                <input type="hidden" name="button_subtype" value="services">
-                <input type="hidden" name="no_note" value="0">
-                <input type="hidden" name="tax_rate" value="0.000">
-                <input type="hidden" name="shipping" value="0.00">
-                <input type="hidden" name="bn" value="PP-BuyNowBF:btn_buynowCC_LG.gif:NonHostedGuest">
-                <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-                <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-            </form>
-    </div>
-  </div>
+<body>
+				<div id="body_cont">
+
+					<div id="shop_main_cont">
+
+						<div id="shop_cont">
+
+							<div class="order_now">
+
+									<div class="basket_icon">
+										<a href="{{url_for('getCart')}}" class="cart_total"> {{ session['Shoppingcart']|length }} </a>
+									</div>
+
+
+							<div class="progress_bar">
+								<div class="prog_top">
+								</div>
+								<div class="prog_btm">
+								</div>
+							</div>
+
+							<div class="delivery_details">
+								
+							</div>
+
+									<div class="basket_cont_order_complete">
+									
+										<div class="segment_titles_checkout"> YOUR ITEMS </div>
+										
+										{% if session['Shoppingcart']|length > 0 %}
+										{% for key, product in session['Shoppingcart'].items() %}
+										{% set discount =(product.discount/100) * product.price|float %}
+										<div class="basket_item">
+											<div class="bi_img">
+												<img src="{{url_for('static',filename='images/'+ product.image)}}" alt="{{product.name}}" width="100%" height="">
+											</div>
+											<div class="bi_info">
+												<div class="bi_name">
+													{{product.name}}
+												</div>
+												<div class="bi_price">
+													£{{product.price}}
+													| Qty: 1 | Size: M (UK)
+												</div>
+	
+							<!-- ///// COLOR OPTIONS /////// -->
+	
+												{% set colors = product.colors.split(',') %}
+												<label for="colors">Colors: </label>
+												<select name="color" id="color">
+													<option value="{{product.color}}" style="display: none;">{{product.color|capitalize}}</option>
+													{% for color in colors %}
+													{% set col = color.split(':') %}
+													<option value="{{col[0]}}">{{col[0] | capitalize }}</option>
+													{% endfor %}
+												</select>
+	
+	
+							<!---- Calulating Product Discount  ------>
+	
+												<div class="bi_price">
+												<td> <input type="number" name="quantity" min="1" max="10" value="{{product.quantity}}"> </td>
+	
+												{% if product.discount  %}
+												<td>{{product.discount}} % &nbsp; &nbsp; is {{"%.2f"|format(discount)}}</td>
+												{% else %}
+												<td></td>
+												{% endif %}
+												{% set subtotal = product.quantity|int * product.price|float  %}
+												<td>£{{"%.2f"|format(subtotal - discount|round(1,'floor')) }}</td>
+	
+	
+												</div>
+	
+	
+	
+	
+											</div>
+											<div class="bi_del_btn"><a href="{{url_for('deleteitem', id=key)}}" class="bi_del_btn_img"></a></div>
+										</div>
+	
+
+										{% endfor %}
+										{% endif %}
+
+
+										<div class=""><button type="submit" class="bi_edit">Edit Basket</button></div>
+
+											<div class="cost_calculation">
+												{% if session['Shoppingcart']|length == 0 %}
+													<div class="bi_price">You currently have no items in your basket... </div>
+
+												{% elif session['Shoppingcart']|length > 0 %}
+													<div class="breakdown_cont"> <div  class="bi_price">(Excl. delivery): </div><div class="breakdown_price">£{{grandtotal}}</div></div>
+												{% endif %} 
+											</div>
+
+
+											<div class=""> 
+												<!-- <a href="{{url_for('getCart')}}" class="checkout_btn"> COMPLETE ORDER </a>  -->
+											</div>
+
+								</div>
+
+
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+
 </div>
+
+<div>{% include 'footer.html' %}</div>
+
+
+
+
+
+<script src="post_grid.js" type="text/javascript"></script>
+<script src="paralax.js"></script>
+
+<script type="text/javascript">
+	////////////////ON BUTTON CLICK, CHANGE//////...
+var content = document.getElementById("checkOut");
+var content2 = document.getElementById("item_section");
+
+var button = document.getElementById("checkOut");
+			button.onclick = function(){
+			if(content.className== "open"){
+			content.className = "" ;
+			content2.className = "" ;
+
+			}else{
+			content.className = "open";
+			content2.className = "open" ;
+			}
+
+			};
+
+////////////////////////SIGN UP FORM///////////////////////////
+var sign_up_form_cont = document.getElementById("sign_up_form_cont");
+var sign_up_form = document.getElementById("sign_up_form");
+var sign_up_btn = document.getElementById("sign_up_btn");
+
+		sign_up_btn.onclick = function(){
+
+			if(sign_up_form.className== "open"){
+			sign_up_form.className = "";
+			sign_up_form_cont.className = ""
+
+			}else{
+			sign_up_form.className = "open"
+			sign_up_form_cont.className = "open";
+			}
+
+			};
+
+/////////////////////////////////////////////////////////////
+var sign_up_form_cont = document.getElementById("sign_up_form_cont");
+</script>
+
+
+<script type="text/javascript">
+
+////////////////ON BUTTON CLICK, OPEN ITEM VIEWER //////...
+	var itm_content = document.getElementById("more_info");
+	var itm_button = document.getElementById("sdfdfd");
+	
+	
+				itm_button.onclick = function(){
+				if(itm_content.className== "iopen"){
+				itm_content.className = "" ;
+	
+				}else{
+					itm_content.className = "iopen";
+				}
+	
+				};
+</script>
+
+<script type="text/javascript">
+
+	////////////////ON BUTTON CLICK, OPEN ITEM VIEWER //////...
+	var itm_v_content = document.getElementById("more_info");
+	var itm_v_button = document.getElementById("item_view_cont");
+	var view_v_blr = document.getElementById("shop_main_cont");	
+
+	
+				itm_v_button.onclick = function(){
+				if(itm_v_content.className== "iopen"){
+				itm_v_content.className = "" ;
+				view_v_blr.className = "";
+	
+				}else{
+					itm_v_content.className = "";
+					view_v_blr.className = "";
+
+				}
+	
+				};
+</script>
+
+
+
+<script>
+	document.querySelectorAll('.quicklook_cont').forEach(item => {
+  	item.addEventListener('click', event => {
+    //handle click
+
+	// OPEN ITEM VIEWER ON CLICK //
+
+	var itm_view_cont = document.getElementById("item_view_cont");	
+	var itm_content = document.getElementById("more_info");	
+	var view_blr = document.getElementById("shop_main_cont");
+	
+	
+				if(itm_content.className== "iopen"){
+				itm_content.className = "" ;
+				view_blr.className = "" ;
+				itm_view_cont.className = "" ;
+				}else{
+					itm_content.className = "iopen";
+					view_blr.className = "open";
+					itm_view_cont.className = "open" ;	
+
+				};
+ 		 })
+	})
+
+</script>
+
+<script>
+	var x = document.getElementsByClassName("item");
+	x[0].submit(); // Form submission
+</script>
+
+
 {% endblock content %}
+
+
+
+
+
+
+
+
+
+									

@@ -1,0 +1,30 @@
+version: "3.3"
+
+services:
+
+
+  shapeitapp:
+    image: alimizan/shapeit:latest
+    build: .
+    container_name: shapeitapp
+    ports:
+      - 5000:5000
+    restart: always
+#    depends_on:
+#      - shapeitdb
+    environment:
+      - DATABASE_URI=mysql+pymysql://root:shapeit_3306@shapeitdb/shapeit
+      - SECRET_KEY=akjdss
+
+#  shapeitdb:
+#    image: alimizan/shapeitdb
+#    build: ./shapeit_db/
+#    container_name: shapeitdb
+#    ports:
+#      - target: 3306
+#        published: 3306
+#    restart: always
+#    environment:
+#      - MYSQL_ROOT_PASSWORD=shapeit_3306
+
+      

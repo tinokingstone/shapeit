@@ -1,4 +1,4 @@
-from wtforms import Form, SubmitField,IntegerField,FloatField,StringField,TextAreaField,validators,PasswordField,validators, ValidationError
+from wtforms import Form, SubmitField,IntegerField,FloatField,StringField,TextAreaField,validators,PasswordField,validators, ValidationError, SelectField
 from flask_wtf.file import FileField,FileRequired,FileAllowed
 
 class Addproducts(Form):
@@ -6,6 +6,7 @@ class Addproducts(Form):
     price = FloatField('Price', [validators.DataRequired()])
     discount = IntegerField('Discount', default=0)
     stock = IntegerField('Stock', [validators.DataRequired()])
+    size = SelectField ('Size', [validators.DataRequired()], choices=[( 'XS','Extra Small'), ('S','Small'), ('M','Medium'),('L','Large'),('XL','Extra Large')])
     colors = StringField('Colors', [validators.DataRequired()])
     discription = TextAreaField('Discription', [validators.DataRequired()])
 

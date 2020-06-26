@@ -1,0 +1,153 @@
+{% extends "layout_store.html" %}
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='profile.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='post grid.css') }}">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="parallax.js/parallax.min.js"></script>
+
+<body>
+					<div id="shop_main_cont">
+						<div id="my_info_cont">
+							<div>YOUR ORDERS</div>
+
+							<div class="">{{current_user.name}}</div> 
+
+						</div>
+					</div>
+
+
+
+
+		
+				
+<div>{% include 'footer.html' %}</div>
+
+
+
+
+<script src="post_grid.js" type="text/javascript"></script>
+<script src="paralax.js"></script>
+
+<script type="text/javascript">
+	////////////////ON BUTTON CLICK, CHANGE//////...
+var content = document.getElementById("checkOut");
+var content2 = document.getElementById("item_section");
+
+var button = document.getElementById("checkOut");
+			button.onclick = function(){
+			if(content.className== "open"){
+			content.className = "" ;
+			content2.className = "" ;
+
+			}else{
+			content.className = "open";
+			content2.className = "open" ;
+			}
+
+			};
+
+////////////////////////SIGN UP FORM///////////////////////////
+var sign_up_form_cont = document.getElementById("sign_up_form_cont");
+var sign_up_form = document.getElementById("sign_up_form");
+var sign_up_btn = document.getElementById("sign_up_btn");
+
+		sign_up_btn.onclick = function(){
+
+			if(sign_up_form.className== "open"){
+			sign_up_form.className = "";
+			sign_up_form_cont.className = ""
+
+			}else{
+			sign_up_form.className = "open"
+			sign_up_form_cont.className = "open";
+			}
+
+			};
+
+/////////////////////////////////////////////////////////////
+var sign_up_form_cont = document.getElementById("sign_up_form_cont");
+</script>
+
+
+<script type="text/javascript">
+
+////////////////ON BUTTON CLICK, OPEN ITEM VIEWER //////...
+	var itm_content = document.getElementById("more_info");
+	var itm_button = document.getElementById("sdfdfd");
+	
+	
+				itm_button.onclick = function(){
+				if(itm_content.className== "iopen"){
+				itm_content.className = "" ;
+	
+				}else{
+					itm_content.className = "iopen";
+				}
+	
+				};
+</script>
+
+<script type="text/javascript">
+
+	////////////////ON BUTTON CLICK, OPEN ITEM VIEWER //////...
+	var itm_v_content = document.getElementById("more_info");
+	var itm_v_button = document.getElementById("item_view_cont");
+	var view_v_blr = document.getElementById("shop_main_cont");	
+
+	
+				itm_v_button.onclick = function(){
+				if(itm_v_content.className== "iopen"){
+				itm_v_content.className = "" ;
+				view_v_blr.className = "";
+	
+				}else{
+					itm_v_content.className = "";
+					view_v_blr.className = "";
+
+				}
+	
+				};
+</script>
+
+
+
+<script>
+	document.querySelectorAll('.quicklook_cont').forEach(item => {
+  	item.addEventListener('click', event => {
+    //handle click
+
+	// OPEN ITEM VIEWER ON CLICK //
+
+	var itm_view_cont = document.getElementById("item_view_cont");	
+	var itm_content = document.getElementById("more_info");	
+	var view_blr = document.getElementById("shop_main_cont");
+	
+	
+				if(itm_content.className== "iopen"){
+				itm_content.className = "" ;
+				view_blr.className = "" ;
+				itm_view_cont.className = "" ;
+				}else{
+					itm_content.className = "iopen";
+					view_blr.className = "open";
+					itm_view_cont.className = "open" ;	
+
+				};
+ 		 })
+	})
+
+</script>
+
+<script>
+	var x = document.getElementsByClassName("item");
+	x[0].submit(); // Form submission
+</script>
+
+{% endblock content %}
+

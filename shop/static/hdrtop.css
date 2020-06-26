@@ -262,7 +262,7 @@ input[type=password] {
 }
 
 
-input[type=submit] {
+/* input[type=submit] {
     width: 90%;
     height: auto ;
 	margin: 2.5%;
@@ -272,9 +272,7 @@ input[type=submit] {
     color: #303030;
 	border: 1px solid yellow;
 	font-size: 15px;
-
-
-}
+} */
 
 input:focus,
 select:focus,

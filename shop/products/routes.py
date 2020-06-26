@@ -1,10 +1,12 @@
 from flask import render_template,session, request,redirect,url_for,flash,current_app
-from shop import app,db,photos, search
+from flask_login import login_required, current_user, logout_user, login_user
+from shop import app, db, photos, search, bcrypt, login_manager
 from .models import Category,Brand,Addproduct
+from shop.customers.model import Register
 from .forms import Addproducts
-from ..customers.forms import CustomerLoginFrom
-import secrets
+from ..customers.forms import CustomerLoginFrom, CustomerRegisterForm
 import os
+import secrets
 
 
 #################### Functions to Add to STORE page ####################
@@ -43,7 +45,7 @@ def AddCart():
                 session['Shoppingcart'] = DictItems
                 return redirect(request.referrer)    
     except Exception as e:
-        print(e)
+        print(e) 
     finally:
         return redirect(request.referrer)
 
@@ -66,10 +68,82 @@ def grandtotal ():
     return grandtotal 
 
 #################### Functions to Add to STORE page ####################
-
+@app.route('/',methods =['GET' , 'POST'])
 @app.route('/landing',methods =['GET' , 'POST'])
 def landing():
-	return render_template('landing.html', title='layout' )
+
+    page = request.args.get('page',1, type=int)
+    products = Addproduct.query.filter(Addproduct.stock > 0).order_by(Addproduct.id.desc())
+    products = Addproduct.query.filter(Addproduct.stock > 0)
+
+    p_id = "1"
+    filterd_resultr=Addproduct.query.filter_by(id=p_id).first()
+    product = Addproduct.query.get_or_404(1)
+    vi_product=filterd_resultr
+
+    #Customer Login Logic 
+    form = CustomerLoginFrom()
+    if form.validate_on_submit():
+        user = Register.query.filter_by(email=form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user)
+            flash('You are login now!', 'success')
+            next = request.args.get('next')
+            return redirect(next or url_for('store'))
+        flash('Incorrect email and password','danger')
+        return redirect(url_for('store'))
+
+    #Customer Register Logic
+    form_R = CustomerRegisterForm()
+    if form.validate_on_submit():
+        hash_password = bcrypt.generate_password_hash(form.password.data)
+        register = Register(name=form.name.data, username=form.username.data, email=form.email.data,password=hash_password,country=form.country.data, city=form.city.data,contact=form.contact.data, address=form.address.data, zipcode=form.zipcode.data)
+        db.session.add(register)
+        flash(f'Welcome {form.name.data} Thank you for registering', 'success')
+        db.session.commit()
+        return redirect(url_for('store'))  
+
+    return render_template('landing.html', title='layout',  grandtotal=grandtotal(), products=products, brands=brands(), product=product, filterd_resultr=filterd_resultr, vi_product=vi_product, categories=categories(), form_R=form_R, form=form)
+
+
+@app.route('/footer')
+def footer():
+    products = Addproduct.query.filter(Addproduct.stock > 0).order_by(Addproduct.id.desc())
+    product = Addproduct.query.get_or_404(6)
+    p_id = 3
+    filterd_resultr=Addproduct.query.filter_by(id=p_id).first()
+    allresult = Addproduct.query.all()
+    return render_template('footer.html' ,products=products, product=product, allresult=allresult, filterd_resultr=filterd_resultr)
+
+
+
+
+@app.route('/my_account')
+def my_account():
+    products = Addproduct.query.filter(Addproduct.stock > 0).order_by(Addproduct.id.desc())
+    product = Addproduct.query.get_or_404(6)
+    p_id = 3
+    filterd_resultr=Addproduct.query.filter_by(id=p_id).first()
+    allresult = Addproduct.query.all()
+    return render_template('my_account.html' ,products=products, product=product, allresult=allresult, filterd_resultr=filterd_resultr)
+
+@app.route('/order_history')
+def order_history():
+    products = Addproduct.query.filter(Addproduct.stock > 0).order_by(Addproduct.id.desc())
+    product = Addproduct.query.get_or_404(6)
+    p_id = 3
+    filterd_resultr=Addproduct.query.filter_by(id=p_id).first()
+    allresult = Addproduct.query.all()
+    return render_template('order_history.html' ,products=products, product=product, allresult=allresult, filterd_resultr=filterd_resultr)
+
+@app.route('/settings')
+def settings():
+    products = Addproduct.query.filter(Addproduct.stock > 0).order_by(Addproduct.id.desc())
+    product = Addproduct.query.get_or_404(6)
+    p_id = 3
+    filterd_resultr=Addproduct.query.filter_by(id=p_id).first()
+    allresult = Addproduct.query.all()
+    return render_template('settings.html' ,products=products, product=product, allresult=allresult, filterd_resultr=filterd_resultr)
 	
 @app.route('/test')
 def test():
@@ -89,22 +163,44 @@ def layout():
 def layout_store():
     filterd_resultr="filterd_resultr"
     product = Addproduct.query.get_or_404(6)
-    return render_template('layout_store.html', title='layout', product=product, filterd_resultr=filterd_resultr)
+    products = Addproduct.query.filter(Addproduct.stock > 0).order_by(Addproduct.id.desc())
+    return render_template('layout_store.html', title='layout', product=product, filterd_resultr=filterd_resultr, products= products)
 
-@app.route('/',methods =['GET' , 'POST'])
-@app.route('/store/',methods =['GET' , 'POST'])
+@app.route('/store',methods =['GET' , 'POST'])
 def store():
     page = request.args.get('page',1, type=int)
-    products = Addproduct.query.filter(Addproduct.stock > 0).order_by(Addproduct.id.desc()).paginate(page=page, per_page=8)
-    products = Addproduct.query.filter(Addproduct.stock > 0)
+    products = Addproduct.query.filter(Addproduct.stock > 0).order_by(Addproduct.id.desc()).paginate(page=page, per_page=16)
+    product = Addproduct.query.get_or_404(1)
+    sizes = Addproduct.query.filter(Addproduct.size)
 
     p_id = "1"
     filterd_resultr=Addproduct.query.filter_by(id=p_id).first()
-    product = Addproduct.query.get_or_404(1)
+    product = Addproduct.query.get_or_404(4)
     vi_product=filterd_resultr
-    form = CustomerLoginFrom() 
 
-    return render_template('store.html', title='layout', grandtotal=grandtotal(), products=products, brands=brands(), product=product, filterd_resultr=filterd_resultr, vi_product=vi_product, categories=categories(), form=form)
+    #Customer Login Logic 
+    form = CustomerLoginFrom()
+    if form.validate_on_submit():
+        user = Register.query.filter_by(email=form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user)
+            flash('You are login now!', 'success')
+            next = request.args.get('next')
+            return redirect(next or url_for('store'))
+        flash('Incorrect email and password','danger')
+        return redirect(url_for('store'))
+
+    #Customer Register Logic
+    form_R = CustomerRegisterForm()
+    if form.validate_on_submit():
+        hash_password = bcrypt.generate_password_hash(form.password.data)
+        register = Register(name=form.name.data, username=form.username.data, email=form.email.data,password=hash_password,country=form.country.data, city=form.city.data,contact=form.contact.data, address=form.address.data, zipcode=form.zipcode.data)
+        db.session.add(register)
+        flash(f'Welcome {form.name.data} Thank you for registering', 'success')
+        db.session.commit()
+        return redirect(url_for('store'))  
+
+    return render_template('store.html', title='layout',sizes=sizes, grandtotal=grandtotal(), products=products, brands=brands(), product=product, filterd_resultr=filterd_resultr, vi_product=vi_product, categories=categories(), form_R=form_R, form=form)
 
 @app.route('/home')
 def home():
@@ -117,32 +213,153 @@ def home():
 @app.route('/result')
 def result():
     searchword = request.args.get('q')
-    products = Addproduct.query.msearch(searchword, fields=['name','desc'] , limit=6)
+    products = Addproduct.query.msearch(searchword, fields=['name','desc'] , limit=6).all()
     return render_template('products/result.html',products=products,brands=brands(),categories=categories())
 
 @app.route('/product/<int:id>')
 def single_page(id):
     product = Addproduct.query.get_or_404(id)
-    return render_template('products/single_page.html',product=product,brands=brands(),categories=categories())
+    page = request.args.get('page',1, type=int)
+    products = Addproduct.query.filter(Addproduct.stock > 0).order_by(Addproduct.id.desc())
+    products = Addproduct.query.filter(Addproduct.stock > 0)
 
+    p_id = "1"
+    filterd_resultr=Addproduct.query.filter_by(id=p_id).first()
+    product = Addproduct.query.get_or_404(id)
+    vi_product=filterd_resultr
 
+    #Customer Login Logic 
+    form = CustomerLoginFrom()
+    if form.validate_on_submit():
+        user = Register.query.filter_by(email=form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user)
+            flash('You are login now!', 'success')
+            next = request.args.get('next')
+            return redirect(next or url_for('store'))
+        flash('Incorrect email and password','danger')
+        return redirect(url_for('store'))
+
+    #Customer Register Logic
+    form_R = CustomerRegisterForm()
+    if form.validate_on_submit():
+        hash_password = bcrypt.generate_password_hash(form.password.data)
+        register = Register(name=form.name.data, username=form.username.data, email=form.email.data,password=hash_password,country=form.country.data, city=form.city.data,contact=form.contact.data, address=form.address.data, zipcode=form.zipcode.data)
+        db.session.add(register)
+        flash(f'Welcome {form.name.data} Thank you for registering', 'success')
+        db.session.commit()
+        return redirect(url_for('store'))
+
+    return render_template('products/single_page.html',product=product,brands=brands(),categories=categories(),grandtotal=grandtotal(), products=products, filterd_resultr=filterd_resultr, vi_product=vi_product, form=form, form_R=form_R)
 
 
 @app.route('/brand/<int:id>')
 def get_brand(id):
     page = request.args.get('page',1, type=int)
     get_brand = Brand.query.filter_by(id=id).first_or_404()
+    products = Addproduct.query.filter(Addproduct.stock > 0).order_by(Addproduct.id.desc()).paginate(page=page, per_page=16)
     brand = Addproduct.query.filter_by(brand=get_brand).paginate(page=page, per_page=8)
-    return render_template('products/index.html',brand=brand,brands=brands(),categories=categories(),get_brand=get_brand)
+
+    p_id = "1"
+    filterd_resultr=Addproduct.query.filter_by(id=p_id).first()
+    product = Addproduct.query.get_or_404(1)
+    vi_product=filterd_resultr
+
+    #Customer Login Logic 
+    form = CustomerLoginFrom()
+    if form.validate_on_submit():
+        user = Register.query.filter_by(email=form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user)
+            flash('You are login now!', 'success')
+            next = request.args.get('next')
+            return redirect(next or url_for('store'))
+        flash('Incorrect email and password','danger')
+        return redirect(url_for('store'))
+
+    #Customer Register Logic
+    form_R = CustomerRegisterForm()
+    if form.validate_on_submit():
+        hash_password = bcrypt.generate_password_hash(form.password.data)
+        register = Register(name=form.name.data, username=form.username.data, email=form.email.data,password=hash_password,country=form.country.data, city=form.city.data,contact=form.contact.data, address=form.address.data, zipcode=form.zipcode.data)
+        db.session.add(register)
+        flash(f'Welcome {form.name.data} Thank you for registering', 'success')
+        db.session.commit()
+        return redirect(url_for('store')) 
+
+    return render_template('store.html',brand=brand,brands=brands(), categories=categories(),get_brand=get_brand,grandtotal=grandtotal(), filterd_resultr=filterd_resultr, vi_product=vi_product, form_R=form_R, form=form)
 
 
 @app.route('/categories/<int:id>')
 def get_category(id):
     page = request.args.get('page',1, type=int)
     get_cat = Category.query.filter_by(id=id).first_or_404()
+    products = Addproduct.query.filter(Addproduct.stock > 0).order_by(Addproduct.id.desc()).paginate(page=page, per_page=16)
     get_cat_prod = Addproduct.query.filter_by(category=get_cat).paginate(page=page, per_page=8)
-    return render_template('products/index.html',get_cat_prod=get_cat_prod,brands=brands(),categories=categories(),get_cat=get_cat)
 
+    p_id = "1"
+    filterd_resultr=Addproduct.query.filter_by(id=p_id).first()
+    product = Addproduct.query.get_or_404(1)
+    vi_product=filterd_resultr
+
+    #Customer Login Logic 
+    form = CustomerLoginFrom()
+    if form.validate_on_submit():
+        user = Register.query.filter_by(email=form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user)
+            flash('You are login now!', 'success')
+            next = request.args.get('next')
+            return redirect(next or url_for('store'))
+        flash('Incorrect email and password','danger')
+        return redirect(url_for('store'))
+
+    #Customer Register Logic
+    form_R = CustomerRegisterForm()
+    if form.validate_on_submit():
+        hash_password = bcrypt.generate_password_hash(form.password.data)
+        register = Register(name=form.name.data, username=form.username.data, email=form.email.data,password=hash_password,country=form.country.data, city=form.city.data,contact=form.contact.data, address=form.address.data, zipcode=form.zipcode.data)
+        db.session.add(register)
+        flash(f'Welcome {form.name.data} Thank you for registering', 'success')
+        db.session.commit()
+        return redirect(url_for('store')) 
+        
+    return render_template('store.html',get_cat_prod=get_cat_prod,brands=brands(),categories=categories(),get_cat=get_cat, grandtotal=grandtotal(), filterd_resultr=filterd_resultr, vi_product=vi_product, form_R=form_R, form=form)
+
+@app.route('/Discount')
+def get_Discount():
+    page = request.args.get('page',1, type=int)
+    products = Addproduct.query.filter(Addproduct.stock > 0, Addproduct.discount).order_by(Addproduct.id.desc()).paginate(page=page, per_page=16)
+    product = Addproduct.query.get_or_404(1)
+
+    p_id = "1"
+    filterd_resultr=Addproduct.query.filter_by(id=p_id).first()
+    product = Addproduct.query.get_or_404(1)
+    vi_product=filterd_resultr
+
+    #Customer Login Logic 
+    form = CustomerLoginFrom()
+    if form.validate_on_submit():
+        user = Register.query.filter_by(email=form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user)
+            flash('You are login now!', 'success')
+            next = request.args.get('next')
+            return redirect(next or url_for('store'))
+        flash('Incorrect email and password','danger')
+        return redirect(url_for('store'))
+
+    #Customer Register Logic
+    form_R = CustomerRegisterForm()
+    if form.validate_on_submit():
+        hash_password = bcrypt.generate_password_hash(form.password.data)
+        register = Register(name=form.name.data, username=form.username.data, email=form.email.data,password=hash_password,country=form.country.data, city=form.city.data,contact=form.contact.data, address=form.address.data, zipcode=form.zipcode.data)
+        db.session.add(register)
+        flash(f'Welcome {form.name.data} Thank you for registering', 'success')
+        db.session.commit()
+        return redirect(url_for('store'))  
+
+    return render_template('store.html', title='layout', grandtotal=grandtotal(), products=products, brands=brands(), product=product, filterd_resultr=filterd_resultr, vi_product=vi_product, categories=categories(), form_R=form_R, form=form)
 
 @app.route('/addbrand',methods=['GET','POST'])
 def addbrand():
@@ -233,6 +450,7 @@ def addproduct():
         price = form.price.data
         discount = form.discount.data
         stock = form.stock.data
+        size = form.size.data
         colors = form.colors.data
         desc = form.discription.data
         brand = request.form.get('brand')
@@ -240,7 +458,7 @@ def addproduct():
         image_1 = photos.save(request.files.get('image_1'), name=secrets.token_hex(10) + ".")
         image_2 = photos.save(request.files.get('image_2'), name=secrets.token_hex(10) + ".")
         image_3 = photos.save(request.files.get('image_3'), name=secrets.token_hex(10) + ".")
-        addproduct = Addproduct(name=name,price=price,discount=discount,stock=stock,colors=colors,desc=desc,category_id=category,brand_id=brand,image_1=image_1,image_2=image_2,image_3=image_3)
+        addproduct = Addproduct(name=name,price=price,size=size,discount=discount,stock=stock,colors=colors,desc=desc,category_id=category,brand_id=brand,image_1=image_1,image_2=image_2,image_3=image_3)
         db.session.add(addproduct)
         flash(f'The product {name} was added in database','success')
         db.session.commit()
@@ -263,6 +481,7 @@ def updateproduct(id):
         product.price = form.price.data
         product.discount = form.discount.data
         product.stock = form.stock.data 
+        product.size = form.size.data
         product.colors = form.colors.data
         product.desc = form.discription.data
         product.category_id = category
@@ -293,6 +512,7 @@ def updateproduct(id):
     form.price.data = product.price
     form.discount.data = product.discount
     form.stock.data = product.stock
+    form.size.data = product.size
     form.colors.data = product.colors
     form.discription.data = product.desc
     brand = product.brand.name

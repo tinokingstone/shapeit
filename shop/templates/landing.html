@@ -1,19 +1,135 @@
-{% extends "layout.html" %}
+{% extends "layout_store.html" %}
 {% block content %}
 <head>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='profile.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='post grid.css') }}">    
+   
 </head>
 
+<div id="shop_main_cont">
+
+<a href="{{url_for('getCart')}}" class="">
+  <div id="landing_adv" class="landing_adv">
+    <div class="super_title_3">
+      FIND YOUR FIT
+    </div>
+      <a href="{{url_for('getCart')}}" class="shop_now_btn"> SHOP NOW </a> 
+    </div>
+</a> 
+
+<div id="landing_section_1" class="landing_section_1">
+  <div class="super_title_2">
+      TRY OUR BEST SELLERS 
+  </div>
+</div>
 
 
-<div id="container" class="container">
-	<div  id="parallax" class="parallax" data-parallax="scroll" data-z-index="1" data-image-src="bg.jpg">
-			<div id="enterSite_btn">
-				<div class="btntxt">Enter Shop</div>
-			</div>
-	</div>
+
+<a href="{{url_for('getCart')}}" class="">
+  <div id="our_products" class="our_products">
+    <div class="super_title">
+    BACK IN STOCK 
+    </div>
+  </div>
+</a> 
+
+<div id="landing_section_1" class="landing_section_1">
+  <div class="super_title_2">
+      TRY OUR ... 
+  </div>
+</div>
+
+<div id="landing_section_2" class="landing_section_2">
+
+  <a href="{{url_for('getCart')}}" class="">
+
+    <div class="" id="adv_dual_split">
+      <img src="{{url_for('static', filename='images/test2.jpg' )}}" alt="{{product.name}}" class="itm_img">
+    </div>
+  
+  </a>
+
+  <a href="{{url_for('getCart')}}" class="">
+    <div class="adv_dual_split">
+      <img src="{{url_for('static', filename='images/test2.jpg' )}}" alt="{{product.name}}" class="itm_img">
+    </div>
+  </a>
+
+</div>
+
+<div id="landing_section_1" class="landing_section_1">
+  <div class="super_title_2">
+      SPECIAL OFFERES ... 
+  </div>
+</div>
+
+<a href="{{url_for('getCart')}}" class="">
+  <div id="our_products" class="our_products">
+      <div class="super_title">
+        GET THE FIGURE YOU HAVE ALWAYS WANTED
+      </div>
+  </div>
+</a>
+
+
+<div id="footer" class="footer">
+  <div class="footer_cont">
+
+      <div class="footer_div">
+        <div class="footer_title">WANT MORE ?</div>
+        <div class="footer_link">Size Guide</div>
+        <div class="footer_link">Delivery and Returns</div>
+        <div class="footer_link">About Us</div>
+        <div class="footer_link">Privacy policy</div>
+        <div class="footer_link">Terms od Service</div>
+
+        <div class="footer_link">2020 Shapit UK</div>
+      </div>
+
+      <div class="footer_div">
+        <div class="footer_title">WHY USE A WAIST TRAINER ?</div>
+        <div class="footer_link">How To Use a Waist Trainer</div>
+        <div class="footer_link">Garment Care</div>
+        <div class="footer_link">Size Guide</div>
+        <div class="footer_link">Beginners Guide to Waist Training</div>
+
+      </div>
+
+      <div class="footer_div">
+        <div class="footer_title">SHAPE IT UK</div>
+        <div class="footer_link">Adress line</div>
+        <div class="footer_link">Adress line</div>
+        <div class="footer_link">Adress line</div>
+        <div class="footer_link">Adress line</div>
+      </div>
+
+      <div class="footer_div">
+        <div class="footer_title">SOCIAL MEDIA LINKS</div>
+        <div class="footer_link">Facebook</div>
+        <div class="footer_link">instagram</div>
+        <div class="footer_link">Twitter</div>
+        <div class="footer_link">Snapchat</div>
+      </div>
+    </div>
+
+    <!-- payment methods  -->
+
+
+  </div>
+ 
+  <div class="payment_system">
+    
+    <div class="footer_div_payment">
+        <div class="footer_title2">PAYMENT METHODS</div>
+        <div class="footer_icon">      <img src="{{url_for('static', filename='icons/icons8-paypal-480.png' )}}" alt="{{product.name}}" class="itm_img"></div>
+        <div class="footer_icon">      <img src="{{url_for('static', filename='icons/icons8-mastercard-480.png' )}}" alt="{{product.name}}" class="itm_img"></div>
+        <div class="footer_icon">      <img src="{{url_for('static', filename='icons/icons8-visa-480.png' )}}" alt="{{product.name}}" class="itm_img"></div>
+        <div class="footer_icon">      <img src="{{url_for('static', filename='icons/icons8-american-express-480.png' )}}" alt="{{product.name}}" class="itm_img"></div>
+    </div>
+
+</div>
+
 </div>
 
 {% endblock content %}
+
+
+

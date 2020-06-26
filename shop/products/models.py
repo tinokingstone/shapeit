@@ -10,6 +10,7 @@ class Addproduct(db.Model):
     discount = db.Column(db.Integer, default=0)
     stock = db.Column(db.Integer, nullable=False)
     colors = db.Column(db.Text, nullable=False)
+    size = db.Column(db.Text, nullable=False)
     desc = db.Column(db.Text, nullable=False)
     pub_date = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)
 

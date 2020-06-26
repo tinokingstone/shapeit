@@ -2,6 +2,8 @@ from flask import render_template,session, request,redirect,url_for,flash,curren
 from shop import db , app
 from shop.products.models import Addproduct
 from shop.products.routes import brands, categories
+from ..customers.forms import CustomerLoginFrom, CustomerRegisterForm
+
 import json
 
 def MagerDicts(dict1,dict2):
@@ -52,7 +54,33 @@ def getCart():
         subtotal -= discount
         tax =("%.2f" %(.06 * float(subtotal)))
         grandtotal = float("%.2f" % (1.06 * subtotal))
-    return render_template('products/carts.html',tax=tax, grandtotal=grandtotal,brands=brands(),categories=categories())
+
+    
+    #Customer Login Logic 
+    form = CustomerLoginFrom()
+    if form.validate_on_submit():
+        user = Register.query.filter_by(email=form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user)
+            flash('You are login now!', 'success')
+            next = request.args.get('next')
+            return redirect(next or url_for('store'))
+        flash('Incorrect email and password','danger')
+        return redirect(url_for('store'))
+
+    #Customer Register Logic    
+    form_R = CustomerRegisterForm()
+    if form.validate_on_submit():
+        hash_password = bcrypt.generate_password_hash(form.password.data)
+        register = Register(name=form.name.data, username=form.username.data, email=form.email.data,password=hash_password,country=form.country.data, city=form.city.data,contact=form.contact.data, address=form.address.data, zipcode=form.zipcode.data)
+        db.session.add(register)
+        flash(f'Welcome {form.name.data} Thank you for registering', 'success')
+        db.session.commit()
+        return redirect(url_for('store'))  
+    products = Addproduct.query.filter(Addproduct.stock > 0).order_by(Addproduct.id.desc())
+    product = Addproduct.query.get_or_404(1)
+
+    return render_template('products/carts.html',tax=tax, grandtotal=grandtotal,brands=brands(),categories=categories(), form_R=form_R, form=form, products=products, product=product)
 
 
 @app.route('/updatecart/<int:code>', methods=['POST'])
